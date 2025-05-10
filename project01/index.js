@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const Path =require("path")
+const fs = require('fs')
 
 //parses
 app.use(express.json())
@@ -9,7 +10,14 @@ app.use(express.static(Path.join(__dirname,'public')));
 app.set('view engine','ejs')
 
 app.get("/",function(req,res){
-    res.render("index")
+    fs.readdir(`./files`,function(err, files){
+          res.render("index",{files:files});
+    })
+
+})
+app.post("/create",function(req,res){
+   fs.writeFile(`./files/${req.body.title.split(' ').join('')}.txt`, req.body.details ,function(err){ })
+   res.redirect("/")
 
 })
 app.get("/author/:username/:age",function(req,res){
@@ -17,4 +25,5 @@ app.get("/author/:username/:age",function(req,res){
 });
 app.listen(3000,function(){
     console.log("project starrted ")
+
 })
